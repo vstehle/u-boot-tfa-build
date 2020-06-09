@@ -2,9 +2,9 @@
 	<remote name="marvell" fetch="https://github.com/MarvellEmbeddedProcessors"/>
 
 	<default revision="refs/heads/master" remote="marvell" sync-j="4"/>
-	<project name="u-boot-marvell" remote="marvell" path="u-boot"/>
-	<project name="binaries-marvell" remote="marvell" path="binaries-marvell"/>
-	<project name="atf-marvell" remote="marvell" path="arm-trusted-firmware"/>
-	<project name="mv-ddr-marvell" remote="marvell" path="mv-ddr"/>
+	<project name="u-boot-marvell" remote="marvell" path="u-boot" revision="refs/heads/u-boot-2017.03-armada-17.10"/>
+	<project name="binaries-marvell" remote="marvell" path="binaries-marvell" revision="refs/heads/binaries-marvell-armada-17.10"/>
+	<project name="atf-marvell" remote="marvell" path="arm-trusted-firmware" revision="refs/heads/atf-v1.3-armada-17.10"/>
+	<project name="mv-ddr-marvell" remote="marvell" path="mv-ddr" revision="refs/heads/mv_ddr-armada-17.10"/>
 </manifest>
 
