@@ -1,0 +1,10 @@
+<manifest>
+	<remote name="marvell" fetch="https://github.com/MarvellEmbeddedProcessors"/>
+
+	<default revision="refs/heads/master" remote="marvell" sync-j="4"/>
+	<project name="u-boot-marvell" remote="marvell" path="u-boot"/>
+	<project name="binaries-marvell" remote="marvell" path="binaries-marvell"/>
+	<project name="atf-marvell" remote="marvell" path="arm-trusted-firmware"/>
+	<project name="mv-ddr-marvell" remote="marvell" path="mv-ddr"/>
+</manifest>
+
