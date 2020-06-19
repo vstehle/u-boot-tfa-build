@@ -3,6 +3,10 @@ export MAKE=make
 
 TARGET ?= mcbin
 
+export DT_PATH=${CURDIR}/devicetree-rebasing
+export UBOOT_PATH=${CURDIR}/u-boot
+export TFA_PATH=${CURDIR}/arm-trusted-firmware
+
 mcbin_DTB_TARGET=src/arm64/marvell/armada-8040-mcbin.dtb
 mcbin_UBOOT_TARGET=mvebu_mcbin-88f8040
 mcbin_TFA_PLAT=a80x0_mcbin
@@ -17,12 +21,9 @@ export DTB_TARGET=${${TARGET}_DTB_TARGET}
 export TFA_PLAT=${${TARGET}_TFA_PLAT}
 export TFA_EXTRA=${${TARGET}_TFA_EXTRA}
 export UBOOT_TARGET=${${TARGET}_UBOOT_TARGET}
-export UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA}
+export UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
 
-export DT_PATH=${CURDIR}/devicetree-rebasing
-export UBOOT_PATH=${CURDIR}/u-boot
 export UBOOT_OUTPUT=${UBOOT_PATH}/build-${UBOOT_TARGET}
-export TFA_PATH=${CURDIR}/arm-trusted-firmware
 export TFA_FLASH_IMAGE=${TFA_PATH}/build/${TFA_PLAT}/release/flash-image.bin
 
 mcbin_TFA_EXTRA=MV_DDR_PATH=${CURDIR}/mv-ddr USE_COHERENT_MEM=0 SCP_BL2=${${TARGET}_SCP_BL2} BL33=${UBOOT_OUTPUT}/u-boot.bin all fip
@@ -43,6 +44,9 @@ clean:
 
 dtb:
 	cd ${DT_PATH} && ${MAKE} ${DTB_TARGET}
+	fdtput ${DT_PATH}/${DTB_TARGET} -t s / u-boot-ver `cd ${UBOOT_PATH} && git describe`
+	fdtput ${DT_PATH}/${DTB_TARGET} -t s / tfa-ver `cd ${TFA_PATH} && git describe`
+	fdtput ${DT_PATH}/${DTB_TARGET} -t s / dt-ver `cd ${DT_PATH} && git describe`
 
 u-boot: 
 	mkdir -p ${UBOOT_OUTPUT}
