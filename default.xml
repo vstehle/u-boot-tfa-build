@@ -6,7 +6,7 @@
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
 	<project name="firmware-build" remote="build">
-		<linkfile src="Makefile" dest="firmware-build/Makefile"/>
+		<linkfile src="firmware-build/Makefile" dest="Makefile"/>
 	</project>
 	<project name="ARM-software/arm-trusted-firmware.git" path="arm-trusted-firmware"/>
 	<project name="u-boot/u-boot" path="u-boot"/>
