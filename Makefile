@@ -19,9 +19,7 @@ rockpro64_TFA_PLAT=rk3399
 # Grab the platform specific variables into generic versions
 export DTB_TARGET=${${TARGET}_DTB_TARGET}
 export TFA_PLAT=${${TARGET}_TFA_PLAT}
-export TFA_EXTRA=${${TARGET}_TFA_EXTRA}
 export UBOOT_TARGET=${${TARGET}_UBOOT_TARGET}
-export UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
 
 export UBOOT_OUTPUT=${UBOOT_PATH}/build-${UBOOT_TARGET}
 export TFA_FLASH_IMAGE=${TFA_PATH}/build/${TFA_PLAT}/release/flash-image.bin
@@ -32,6 +30,9 @@ rockpro64_UBOOT_EXTRA=BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
 # Some platforms build TFA then U-Boot; some the other way around. Locate both images
 export BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
 export BL33=${UBOOT_PATH}/u-boot.bin
+
+export TFA_EXTRA=${${TARGET}_TFA_EXTRA}
+export UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
 
 all: dtb u-boot tfa
 
@@ -48,11 +49,11 @@ dtb:
 	fdtput ${DT_PATH}/${DTB_TARGET} -t s / tfa-ver `cd ${TFA_PATH} && git describe`
 	fdtput ${DT_PATH}/${DTB_TARGET} -t s / dt-ver `cd ${DT_PATH} && git describe`
 
-u-boot: 
+u-boot:
 	mkdir -p ${UBOOT_OUTPUT}
 	cd ${UBOOT_PATH} && ${MAKE} KBUILD_OUTPUT=${UBOOT_OUTPUT} ${UBOOT_TARGET}_defconfig && ${MAKE} ${UBOOT_EXTRA} KBUILD_OUTPUT=${UBOOT_OUTPUT} -j4
 
-atf: u-boot
+tfa: u-boot
 	cd ${TFA_PATH} && ${MAKE} LOG_LEVEL=20 PLAT=${TFA_PLAT} ${TFA_EXTRA} all fip
 
 flash-to-sd:
