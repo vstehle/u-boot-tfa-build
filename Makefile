@@ -1,11 +1,11 @@
 export CROSS_COMPILE=aarch64-linux-gnu-
-export MAKE=make
+MAKE=make
 
 TARGET ?= mcbin
 
-export DT_PATH=${CURDIR}/devicetree-rebasing
-export UBOOT_PATH=${CURDIR}/u-boot
-export TFA_PATH=${CURDIR}/arm-trusted-firmware
+DT_PATH=${CURDIR}/devicetree-rebasing
+UBOOT_PATH=${CURDIR}/u-boot
+TFA_PATH=${CURDIR}/arm-trusted-firmware
 
 mcbin_DTB_TARGET=src/arm64/marvell/armada-8040-mcbin.dtb
 mcbin_UBOOT_TARGET=mvebu_mcbin-88f8040
@@ -17,22 +17,19 @@ rockpro64_UBOOT_TARGET=rockpro64-rk3399
 rockpro64_TFA_PLAT=rk3399
 
 # Grab the platform specific variables into generic versions
-export DTB_TARGET=${${TARGET}_DTB_TARGET}
-export TFA_PLAT=${${TARGET}_TFA_PLAT}
-export UBOOT_TARGET=${${TARGET}_UBOOT_TARGET}
+DTB_TARGET=${${TARGET}_DTB_TARGET}
+TFA_PLAT=${${TARGET}_TFA_PLAT}
+UBOOT_TARGET=${${TARGET}_UBOOT_TARGET}
 
-export UBOOT_OUTPUT=${UBOOT_PATH}/build-${UBOOT_TARGET}
-export TFA_FLASH_IMAGE=${TFA_PATH}/build/${TFA_PLAT}/release/flash-image.bin
+UBOOT_OUTPUT=${UBOOT_PATH}/build-${UBOOT_TARGET}
+TFA_FLASH_IMAGE=${TFA_PATH}/build/${TFA_PLAT}/release/flash-image.bin
 
 mcbin_TFA_EXTRA=MV_DDR_PATH=${CURDIR}/mv-ddr USE_COHERENT_MEM=0 SCP_BL2=${${TARGET}_SCP_BL2} BL33=${UBOOT_OUTPUT}/u-boot.bin all fip
 rockpro64_UBOOT_EXTRA=BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
 
-# Some platforms build TFA then U-Boot; some the other way around. Locate both images
-export BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
-export BL33=${UBOOT_PATH}/u-boot.bin
-
-export TFA_EXTRA=${${TARGET}_TFA_EXTRA}
-export UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
+TFA_EXTRA=${${TARGET}_TFA_EXTRA}
+#UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
+UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA}
 
 all: dtb u-boot tfa
 
