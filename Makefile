@@ -11,6 +11,7 @@ mcbin_DTB_TARGET=src/arm64/marvell/armada-8040-mcbin.dtb
 mcbin_UBOOT_TARGET=mvebu_mcbin-88f8040
 mcbin_TFA_PLAT=a80x0_mcbin
 mcbin_SCP_BL2=${CURDIR}/binaries-marvell/mrvl_scp_bl2.img
+mcbin_FLASH_EXTRA=seek=1
 
 rockpro64_DTB_TARGET=src/arm64/rockchip/rk3399-rockpro64-v2.dtb
 rockpro64_UBOOT_TARGET=rockpro64-rk3399
@@ -29,7 +30,8 @@ rockpro64_UBOOT_EXTRA=BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
 
 TFA_EXTRA=${${TARGET}_TFA_EXTRA}
 #UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
-UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA}
+UBOOT_EXTRA=${${TARGET}_UBOOT_EXTRA} EXT_OS_DTB=${DT_PATH}/${${TARGET}_DTB_TARGET}
+FLASH_EXTRA=${${TARGET}_FLASH_EXTRA}
 
 all: dtb u-boot tfa
 
@@ -45,13 +47,14 @@ dtb:
 	fdtput ${DT_PATH}/${DTB_TARGET} -t s / u-boot-ver `cd ${UBOOT_PATH} && git describe`
 	fdtput ${DT_PATH}/${DTB_TARGET} -t s / tfa-ver `cd ${TFA_PATH} && git describe`
 	fdtput ${DT_PATH}/${DTB_TARGET} -t s / dt-ver `cd ${DT_PATH} && git describe`
+	#fdtput ${DT_PATH}/${DTB_TARGET} -t x /ap806/config-space@f0000000/serial@512000 clock-frequency 0xbebc200
 
-u-boot:
+u-boot: dtb
 	mkdir -p ${UBOOT_OUTPUT}
 	cd ${UBOOT_PATH} && ${MAKE} KBUILD_OUTPUT=${UBOOT_OUTPUT} ${UBOOT_TARGET}_defconfig && ${MAKE} ${UBOOT_EXTRA} KBUILD_OUTPUT=${UBOOT_OUTPUT} -j4
 
 tfa: u-boot
-	cd ${TFA_PATH} && ${MAKE} LOG_LEVEL=20 PLAT=${TFA_PLAT} ${TFA_EXTRA} all fip
+	cd ${TFA_PATH} && ${MAKE} LOG_LEVEL=20 PLAT=${TFA_PLAT} ${TFA_EXTRA}
 
 flash-to-sd:
-	sudo dd if=${TFA_FLASH_IMAGE} of=${FLASH_DEVICE} conv=fdatasync status=progress
+	sudo dd if=${TFA_FLASH_IMAGE} of=${FLASH_DEVICE} ${FLASH_EXTRA} conv=fdatasync status=progress
