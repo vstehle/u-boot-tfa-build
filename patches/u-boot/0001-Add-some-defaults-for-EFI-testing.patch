@@ -1,0 +1,62 @@
+From db3f7db3e4fc9fecd041aeeb8637d4d0fd4f3915 Mon Sep 17 00:00:00 2001
+From: Grant Likely <grant.likely@arm.com>
+Date: Tue, 23 Jun 2020 16:55:20 +0100
+Subject: [PATCH 1/2] Add some defaults for EFI testing
+
+Signed-off-by: Grant Likely <grant.likely@arm.com>
+---
+ cmd/Kconfig            | 2 +-
+ fs/fat/Kconfig         | 1 +
+ lib/efi_loader/Kconfig | 4 ++--
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/cmd/Kconfig b/cmd/Kconfig
+index 192b3b262f..dea474e8ed 100644
+--- a/cmd/Kconfig
++++ b/cmd/Kconfig
+@@ -1687,7 +1687,7 @@ config CMD_EFIDEBUG
+ 	bool "efidebug - display/configure UEFI environment"
+ 	depends on EFI_LOADER
+ 	select EFI_DEVICE_PATH_TO_TEXT
+-	default n
++	default y
+ 	help
+ 	  Enable the 'efidebug' command which provides a subset of UEFI
+ 	  shell utility with simplified functionality. It will be useful
+diff --git a/fs/fat/Kconfig b/fs/fat/Kconfig
+index 9bb11eac9f..f440271556 100644
+--- a/fs/fat/Kconfig
++++ b/fs/fat/Kconfig
+@@ -9,6 +9,7 @@ config FS_FAT
+ config FAT_WRITE
+ 	bool "Enable FAT filesystem write support"
+ 	depends on FS_FAT
++	default y
+ 	help
+ 	  This provides support for creating and writing new files to an
+ 	  existing FAT filesystem partition.
+diff --git a/lib/efi_loader/Kconfig b/lib/efi_loader/Kconfig
+index aad37b7155..1c755bc658 100644
+--- a/lib/efi_loader/Kconfig
++++ b/lib/efi_loader/Kconfig
+@@ -36,7 +36,7 @@ config EFI_GET_TIME
+ config EFI_SET_TIME
+ 	bool "SetTime() runtime service"
+ 	depends on EFI_GET_TIME
+-	default n
++	default y
+ 	help
+ 	  Provide the SetTime() runtime service at boottime. This service
+ 	  can be used by an EFI application to adjust the real time clock.
+@@ -157,7 +157,7 @@ config EFI_SECURE_BOOT
+ 	select ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+ 	select X509_CERTIFICATE_PARSER
+ 	select PKCS7_MESSAGE_PARSER
+-	default n
++	default y
+ 	help
+ 	  Select this option to enable EFI secure boot support.
+ 	  Once SecureBoot mode is enforced, any EFI binary can run only if
+-- 
+2.20.1
+

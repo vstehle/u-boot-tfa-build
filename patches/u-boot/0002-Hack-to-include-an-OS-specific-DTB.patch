@@ -1,0 +1,78 @@
+From d8862877dd68f8e78978923a7f95f785694fffaf Mon Sep 17 00:00:00 2001
+From: Grant Likely <grant.likely@arm.com>
+Date: Tue, 23 Jun 2020 16:49:47 +0100
+Subject: [PATCH 2/2] Hack to include an OS-specific DTB
+
+Allow a second .dtb to be appended to the U-Boot binary that will be
+used as the OS dtb instead of the control dtb used by u-boot. Works on
+platforms where the U-Boot and Linux DTBs are not compatible.
+
+This patch forces the .dtb files to be 32 byte aligned so that the
+early code can read the second appended .dtb without unaligned accesses.
+
+Signed-off-by: Grant Likely <grant.likely@arm.com>
+---
+ Makefile             |  2 +-
+ common/board_f.c     | 13 +++++++++++++
+ scripts/Makefile.lib |  2 +-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 149f839948..82fa13a7ea 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1181,7 +1181,7 @@ u-boot-dtb.bin: u-boot-nodtb.bin dts/dt.dtb FORCE
+ 	$(call if_changed,cat)
+ 
+ else ifeq ($(CONFIG_OF_SEPARATE),y)
+-u-boot-dtb.bin: u-boot-nodtb.bin dts/dt.dtb FORCE
++u-boot-dtb.bin: u-boot-nodtb.bin dts/dt.dtb $(EXT_OS_DTB) FORCE
+ 	$(call if_changed,cat)
+ 
+ u-boot.bin: u-boot-dtb.bin FORCE
+diff --git a/common/board_f.c b/common/board_f.c
+index 01194eaa0e..14f48a176c 100644
+--- a/common/board_f.c
++++ b/common/board_f.c
+@@ -667,12 +667,25 @@ static int init_post(void)
+ static int reloc_fdt(void)
+ {
+ #ifndef CONFIG_OF_EMBED
++	const char *opt;
++	const void *fdt_os_blob = gd->fdt_blob + fdt_totalsize(gd->fdt_blob);
++	size_t fdt_os_size;
++	const void *new_os_fdt;
++
+ 	if (gd->flags & GD_FLG_SKIP_RELOC)
+ 		return 0;
+ 	if (gd->new_fdt) {
+ 		memcpy(gd->new_fdt, gd->fdt_blob, gd->fdt_size);
+ 		gd->fdt_blob = gd->new_fdt;
+ 	}
++	if (fdt_check_header(fdt_os_blob) == 0) {
++		fdt_os_size = fdt_totalsize(fdt_os_blob);
++		opt = env_get("fdt_addr_r");
++		if (opt) {
++			new_os_fdt = simple_strtoul(opt, NULL, 16);
++			memcpy(new_os_fdt, fdt_os_blob, fdt_os_size);
++		}
++	}
+ #endif
+ 
+ 	return 0;
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 734001c952..82cf5f6d89 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -321,7 +321,7 @@ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+ 	(cat $<; $(if $(u_boot_dtsi),echo '$(pound)include "$(u_boot_dtsi)"')) > $(pre-tmp); \
+ 	$(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $(pre-tmp) ; \
+-	$(DTC) -O dtb -o $@ -b 0 \
++	$(DTC) -O dtb -o $@ -a 32 -b 0 \
+ 		-i $(dir $<) $(DTC_FLAGS) \
+ 		-d $(depfile).dtc.tmp $(dtc-tmp) || \
+ 		(echo "Check $(shell pwd)/$(pre-tmp) for errors" && false) \
+-- 
+2.20.1
+
