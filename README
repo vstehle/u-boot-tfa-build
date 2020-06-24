@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) Arm Limited, 2020
+
+U-Boot Image Builder Manifest
+-----------------------------
+
+This is a simple tool for build Arm firmware images from U-Boot,
+Trusted Firmware A, and the Linux devicetree repo. It uses the
+git 'repo' tool to clone a copy of each project and a Makefile
+to build for various Arm targets.
+
+Using this tool
+---------------
+This tool uses the git 'repo' tool to build firmware.
+Install repo first
+
+To initialize the build environment, create a new working directory
+and run the repo init command:
+
+  $ mkdir firmware-working
+  $ cd firmware-working
+  $ repo init -u https://github.com/glikely/u-boot-manifest
+
+This will clone all of the required git trees and link the Makefile
+into the root directory. To build the firmware, simply type:
+
+  $ make [TARGET=<target name>]   # Defaults to "mcbin"
+
+Supported Platforms
+-------------------
+1. Macchiato-bin
+3. RockPro64 (incomplete)
+
