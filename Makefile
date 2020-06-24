@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) Arm Limited, 2020
+#
 export CROSS_COMPILE=aarch64-linux-gnu-
 MAKE=make
 
