@@ -5,7 +5,7 @@
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
 	<project name="glikely/u-boot-manifest" path="u-boot-manifest">
-		<linkfile src="Makefile" dest="Makefile"/>
+		<linkfile src="top.mk" dest="Makefile"/>
 	</project>
 	<project name="ARM-software/arm-trusted-firmware.git" path="arm-trusted-firmware"/>
 	<project name="u-boot/u-boot" path="u-boot"/>
