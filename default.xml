@@ -2,7 +2,6 @@
 	<remote name="marvell" fetch="https://github.com/MarvellEmbeddedProcessors"/>
 	<remote name="github" fetch="https://github.com/"/>
 	<remote name="kernel.org" fetch="https://git.kernel.org/pub/scm/linux/kernel/git"/>
-	<remote name="build" fetch="/home/grant/hacking/mcbin"/>
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
 	<project name="glikely/u-boot-manifest" path="u-boot-manifest">
