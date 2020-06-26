@@ -15,18 +15,18 @@ UBOOT_PATH   := ${CURDIR}/u-boot
 UBOOT_OUTPUT := ${UBOOT_PATH}/build-${TARGET}
 TFA_PATH     := ${CURDIR}/arm-trusted-firmware
 
+all: u-boot tfa
+
 # Include the platform specific Makefile
 include u-boot-manifest/${TARGET}.mk
 
 # Grab the platform specific variables into generic versions
 
-UBOOT_EXTRA += EXT_OS_DTB=${DT_PATH}/${DTB_TARGET}
+UBOOT_EXTRA ?= EXT_DTB=${DT_PATH}/${DTB_TARGET}
 UBOOT_DEPS ?= dtb
 TFA_DEPS ?= u-boot
 
 FLASH_IMAGE ?= ${TFA_PATH}/build/${TFA_PLAT}/release/flash-image.bin
-
-all: dtb u-boot tfa
 
 .PHONY: dtb u-boot tfa clean
 
