@@ -4,7 +4,7 @@
 	<remote name="kernel.org" fetch="https://git.kernel.org/pub/scm/linux/kernel/git"/>
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
-	<project name="glikely/u-boot-manifest" path="u-boot-manifest">
+	<project name="glikely/u-boot-manifest" path="scripts">
 		<linkfile src="top.mk" dest="Makefile"/>
 	</project>
 	<project name="ARM-software/arm-trusted-firmware.git" path="arm-trusted-firmware"/>
