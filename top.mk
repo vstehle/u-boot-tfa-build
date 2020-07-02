@@ -18,7 +18,7 @@ TFA_PATH     := ${CURDIR}/arm-trusted-firmware
 all: u-boot tfa
 
 # Include the platform specific Makefile
-include u-boot-manifest/${TARGET}.mk
+include scripts/${TARGET}.mk
 
 # Grab the platform specific variables into generic versions
 
