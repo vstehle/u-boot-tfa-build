@@ -11,8 +11,7 @@ TFA_PLAT   := rk3399
 TFA_EXTRA  := bl31
 TFA_DEPS   := dtb
 
-UBOOT_CONFIG := rockpro64-rk3399
-UBOOT_EXTRA  := BL31=${TFA_PATH}/build/${TFA_PLAT}/release/bl31/bl31.elf
+u-boot: export UBOOT_EXTRA=BL31=$(TFA_PATH)/build/$(TFA_PLAT)/release/bl31/bl31.elf
 UBOOT_EXTRA  += EXT_DTB=${DT_PATH}/${DTB_TARGET}
 UBOOT_DEPS   := tfa
 

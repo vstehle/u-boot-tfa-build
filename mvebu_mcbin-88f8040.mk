@@ -1,7 +1,6 @@
 
 DTB_TARGET   := src/arm64/marvell/armada-8040-mcbin.dtb
 
-UBOOT_CONFIG := mvebu_mcbin-88f8040
 UBOOT_EXTRA := EXT_OS_DTB=${DT_PATH}/${DTB_TARGET}
 
 TFA_PLAT     := a80x0_mcbin
