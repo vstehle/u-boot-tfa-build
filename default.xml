@@ -6,6 +6,7 @@
 
 	<project name="glikely/u-boot-manifest" path="scripts">
 		<linkfile src="top.mk" dest="Makefile"/>
+		<linkfile src="buildall.sh" dest="buildall.sh"/>
 	</project>
 	<project name="ARM-software/arm-trusted-firmware.git" path="arm-trusted-firmware"/>
 	<project name="u-boot/u-boot" path="u-boot"/>

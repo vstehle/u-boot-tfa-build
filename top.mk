@@ -50,7 +50,7 @@ u-boot: dtb ${UBOOT_DEPS}
 	${MAKE} -C ${UBOOT_PATH} ${UBOOT_EXTRA} -j4
 
 tfa: export PLAT=$(TFA_PLAT)
-tfa: ${TFA_DEPS} ${TFA_PATH}/CACHETAG.DIR
+tfa: ${TFA_DEPS}
 	cd ${TFA_PATH} && ${MAKE} LOG_LEVEL=20 ${TFA_EXTRA}
 
 flash-to-sd:
