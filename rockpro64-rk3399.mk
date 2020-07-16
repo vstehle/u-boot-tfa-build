@@ -8,12 +8,11 @@
 DTB_TARGET := src/arm64/rockchip/rk3399-rockpro64-v2.dtb
 
 TFA_PLAT   := rk3399
-TFA_EXTRA  := bl31
 TFA_DEPS   := dtb
 
-u-boot: export UBOOT_EXTRA=BL31=$(TFA_PATH)/build/$(TFA_PLAT)/release/bl31/bl31.elf
-UBOOT_EXTRA  += EXT_DTB=${DT_PATH}/${DTB_TARGET}
-UBOOT_DEPS   := tfa
+UBOOT_EXTRA := BL31=$(TFA_PATH)/build/$(TFA_PLAT)/release/bl31/bl31.elf
+UBOOT_EXTRA += EXT_DTB=${DT_PATH}/${DTB_TARGET}
+UBOOT_DEPS  := tfa-bl31
 
 FLASH_IMAGE := ${UBOOT_OUTPUT}/flash_image.bin
 
