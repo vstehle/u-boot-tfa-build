@@ -23,6 +23,8 @@ UBOOT_EXTRA := BL31=$(TFA_PATH)/build/$(TFA_PLAT)/release/bl31/bl31.elf
 FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
 DTB_TARGET := src/arm64/$(CONFIG_DEFAULT_FDT_FILE)
 u-boot: tfa-bl31
+
+include $(CURDIR)/scripts/rk3399.mk
 endif
 
 ifdef CONFIG_ARMADA_8K
