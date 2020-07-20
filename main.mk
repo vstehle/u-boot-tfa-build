@@ -28,6 +28,7 @@ include $(CURDIR)/scripts/rk3399.mk
 endif
 
 ifdef CONFIG_ARMADA_8K
+include scripts/mvebu-armada-8k.mk
 DTB_TARGET := src/arm64/marvell/$(CONFIG_DEFAULT_DEVICE_TREE).dtb
 ifeq ($(CONFIG_DEFAULT_DEVICE_TREE),"armada-8040-mcbin")
 TFA_PLAT := a80x0_mcbin
