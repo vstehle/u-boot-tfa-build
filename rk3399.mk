@@ -5,8 +5,7 @@
 # Build config for RockPro64
 # Inspired by https://stikonas.eu/wordpress/2019/09/15/blobless-boot-with-rockpro64/
 
-sdcard-image: SD_IMG=$(CURDIR)/$(TARGET)-sdcard.img
-sdcard-image: u-boot
+$(SD_IMG): u-boot
 	dd if=/dev/zero of=$(SD_IMG) seek=32M count=0
 	/sbin/sgdisk -g $(SD_IMG)
 	/sbin/sgdisk -n 1:: $(SD_IMG)

@@ -11,6 +11,7 @@ endif
 
 export CROSS_COMPILE=aarch64-linux-gnu-
 MAKE=make
+SD_IMG=$(CURDIR)/$(TARGET)-sdcard.img
 
 all: # Nothing by default
 
@@ -69,5 +70,8 @@ tfa-bl31:
 tfa-fip: u-boot ${TFA_DEPS}
 	${MAKE} -C ${TFA_PATH} LOG_LEVEL=20 PLAT=$(TFA_PLAT) BL33=$(UBOOT_OUTPUT)/u-boot.bin ${TFA_EXTRA} all fip
 
-flash-to-sd:
-	sudo dd if=${FLASH_IMAGE} of=${FLASH_DEVICE} ${FLASH_EXTRA} conv=fdatasync status=progress
+sd.img: $(SD_IMG)
+
+flash-sd: $(SD_IMG)
+	sudo dd if=${SD_IMG} of=${FLASH_DEVICE} conv=fdatasync status=progress
+
