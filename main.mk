@@ -63,14 +63,11 @@ u-boot: export KBUILD_OUTPUT=$(UBOOT_OUTPUT)
 u-boot: dtb
 	${MAKE} -C ${UBOOT_PATH} ${UBOOT_EXTRA} -j4
 
-tfa-bl31: export PLAT=$(TFA_PLAT)
 tfa-bl31:
-	${MAKE} -C ${TFA_PATH} LOG_LEVEL=20 ${TFA_EXTRA} bl31
+	${MAKE} -C ${TFA_PATH} LOG_LEVEL=20 PLAT=$(TFA_PLAT) ${TFA_EXTRA} bl31
 
-tfa-fip: export BL33=$(UBOOT_OUTPUT)/u-boot.bin
-tfa-fip: export PLAT=$(TFA_PLAT)
 tfa-fip: u-boot ${TFA_DEPS}
-	${MAKE} -C ${TFA_PATH} LOG_LEVEL=20 ${TFA_EXTRA} all fip
+	${MAKE} -C ${TFA_PATH} LOG_LEVEL=20 PLAT=$(TFA_PLAT) BL33=$(UBOOT_OUTPUT)/u-boot.bin ${TFA_EXTRA} all fip
 
 flash-to-sd:
 	sudo dd if=${FLASH_IMAGE} of=${FLASH_DEVICE} ${FLASH_EXTRA} conv=fdatasync status=progress
