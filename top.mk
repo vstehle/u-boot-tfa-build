@@ -18,6 +18,12 @@ all: tfa-fip
 $(UBOOT_OUTPUT)/.config:
 	mkdir -p $(UBOOT_OUTPUT)
 	$(MAKE) -C $(UBOOT_PATH) KBUILD_OUTPUT=$(UBOOT_OUTPUT) $(TARGET)_defconfig
+	echo CONFIG_CMD_BOOTEFI_HELLO=y >> $(UBOOT_OUTPUT)/.config
+	echo CONFIG_CMD_BOOTEFI_SELFTEST=y >> $(UBOOT_OUTPUT)/.config
+	echo CONFIG_CMD_NVEDIT_EFI=y >> $(UBOOT_OUTPUT)/.config
+	echo CONFIG_CMD_EFIDEBUG=y >> $(UBOOT_OUTPUT)/.config
+	echo CONFIG_CMD_GPT=y >> $(UBOOT_OUTPUT)/.config
+	$(MAKE) -C $(UBOOT_PATH) KBUILD_OUTPUT=$(UBOOT_OUTPUT) olddefconfig
 
 %: $(UBOOT_OUTPUT)/.config
 	$(MAKE) -f scripts/main.mk TARGET=$(TARGET) $@
