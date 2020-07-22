@@ -46,7 +46,10 @@ UBOOT_EXTRA ?= EXT_DTB=$(DT_PATH)/$(DTB_TARGET)
 
 FLASH_IMAGE ?= $(TFA_PATH)/build/$(TFA_PLAT)/release/flash-image.bin
 
-.PHONY: dtb u-boot clean
+ESP_SIZE ?= $$((64*1024*1024))
+ESP_OFFSET ?= $$((4*1024*1024))
+
+SCT_VERSION:=UEFI2.6SCTII_Final_Release
 
 .PHONY: dtb u-boot clean
 
@@ -72,3 +75,30 @@ sd.img: $(SD_IMG)
 flash-sd: $(SD_IMG)
 	sudo dd if=${SD_IMG} of=${FLASH_DEVICE} conv=fdatasync status=progress
 
+Shell.efi:
+	wget https://github.com/tianocore/edk2/raw/UDK2018/ShellBinPkg/UefiShell/AArch64/Shell.efi
+
+$(SCT_VERSION).zip:
+	wget http://www.uefi.org/sites/default/files/resources/$(SCT_VERSION).zip
+
+UEFISCT/.done: $(SCT_VERSION).zip
+	unzip -f $(SCT_VERSION).zip UEFISCT.zip
+	unzip -f UEFISCT.zip
+	touch $@
+
+esp.tree/.done: scripts/main.mk Shell.efi $(SCT_VERSION).zip
+	mkdir -p esp.tree/efi/boot
+	mkdir -p esp.tree/UEFISCT
+	cp Shell.efi \
+	   $(DT_PATH)/$(DTB_TARGET) \
+	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_return.efi \
+	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_exception.efi \
+	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_exit.efi \
+	   $(UBOOT_OUTPUT)/lib/efi_loader/helloworld.efi esp.tree/
+	cp -r UEFISCT/SctPackageAARCH64/* esp.tree/UEFISCT
+	touch $@
+
+esp.img: scripts/main.mk Shell.efi esp.tree/.done
+	dd if=/dev/zero of=esp.img count=$$(($(ESP_SIZE) >> 9))
+	/sbin/mkfs.fat esp.img
+	mcopy -i esp.img -s esp.tree/* ::
