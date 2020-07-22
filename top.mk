@@ -15,6 +15,12 @@ export UBOOT_OUTPUT := $(CURDIR)/u-boot/build-$(TARGET)
 
 all: tfa-fip
 
+clean:
+	cd $(UBOOT_PATH) && make mrproper
+	cd $(UBOOT_PATH) && make KBUILD_OUTPUT=$(UBOOT_OUTPUT) clean
+	cd $(TFA_PATH) && git clean -fdx
+	cd $(CURDIR)/mv-ddr && git clean -fdx
+
 $(UBOOT_OUTPUT)/.config:
 	mkdir -p $(UBOOT_OUTPUT)
 	$(MAKE) -C $(UBOOT_PATH) KBUILD_OUTPUT=$(UBOOT_OUTPUT) $(TARGET)_defconfig

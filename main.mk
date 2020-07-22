@@ -48,10 +48,7 @@ FLASH_IMAGE ?= $(TFA_PATH)/build/$(TFA_PLAT)/release/flash-image.bin
 
 .PHONY: dtb u-boot clean
 
-clean:
-	cd ${UBOOT_PATH} && make mrproper
-	cd ${TFA_PATH} && git clean -fdx
-	cd ${CURDIR}/mv-ddr && git clean -fdx
+.PHONY: dtb u-boot clean
 
 dtb:
 	${MAKE} -C ${DT_PATH} ${DTB_TARGET}
