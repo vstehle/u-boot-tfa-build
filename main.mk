@@ -13,7 +13,7 @@ export CROSS_COMPILE=aarch64-linux-gnu-
 MAKE=make
 SD_IMG=$(CURDIR)/$(TARGET)-sdcard.img
 
-all: # Nothing by default
+all: tfa-fip # Nothing by default
 
 # Include the 
 include $(UBOOT_OUTPUT)/.config
@@ -42,7 +42,7 @@ endif
 
 # Grab the platform specific variables into generic versions
 
-UBOOT_EXTRA ?= EXT_DTB=$(DT_PATH)/$(DTB_TARGET)
+#UBOOT_EXTRA ?= EXT_DTB=$(DT_PATH)/$(DTB_TARGET)
 
 FLASH_IMAGE ?= $(TFA_PATH)/build/$(TFA_PLAT)/release/flash-image.bin
 

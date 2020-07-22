@@ -33,3 +33,5 @@ $(UBOOT_OUTPUT)/.config:
 
 %: $(UBOOT_OUTPUT)/.config
 	$(MAKE) -f scripts/main.mk TARGET=$(TARGET) $@
+
+.PHONY: $(UBOOT_OUTPUT)/.config
