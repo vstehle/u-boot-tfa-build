@@ -88,13 +88,15 @@ UEFISCT/.done: $(SCT_VERSION).zip
 
 esp.tree/.done: scripts/main.mk Shell.efi $(SCT_VERSION).zip
 	mkdir -p esp.tree/efi/boot
-	mkdir -p esp.tree/UEFISCT
-	cp Shell.efi \
-	   $(DT_PATH)/$(DTB_TARGET) \
+	cp Shell.efi esp.tree/efi/boot/bootaa64.efi
+
+	cp $(DT_PATH)/$(DTB_TARGET) \
 	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_return.efi \
 	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_exception.efi \
 	   $(UBOOT_OUTPUT)/lib/efi_selftest/efi_selftest_miniapp_exit.efi \
 	   $(UBOOT_OUTPUT)/lib/efi_loader/helloworld.efi esp.tree/
+
+	mkdir -p esp.tree/UEFISCT
 	cp -r UEFISCT/SctPackageAARCH64/* esp.tree/UEFISCT
 	touch $@
 
