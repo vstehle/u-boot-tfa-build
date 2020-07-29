@@ -5,7 +5,6 @@
 ifndef TARGET
   $(error TARGET is not set)
 endif
-MAKE ?= make
 
 # Set some defaults that can be overridden by the target  makefile include
 export DT_PATH    := $(CURDIR)/devicetree-rebasing

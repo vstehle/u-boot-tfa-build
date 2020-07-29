@@ -10,7 +10,6 @@ ifndef UBOOT_OUTPUT
 endif
 
 export CROSS_COMPILE=aarch64-linux-gnu-
-MAKE=make
 SD_IMG=$(CURDIR)/$(TARGET)-sdcard.img
 
 all: tfa-fip # Nothing by default
