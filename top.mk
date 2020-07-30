@@ -19,7 +19,7 @@ endif
 # Set some defaults that can be overridden by the target  makefile include
 export DT_PATH    := $(CURDIR)/devicetree-rebasing
 export DT_OUTPUT  := $(DT_PATH)
-export TFA_PATH   := $(CURDIR)/arm-trusted-firmware
+export TFA_PATH   := $(CURDIR)/trusted-firmware-a
 export UBOOT_PATH := $(CURDIR)/u-boot
 
 # Give the option of building in a separate directory

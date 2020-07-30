@@ -2,13 +2,14 @@
 	<remote name="marvell" fetch="https://github.com/MarvellEmbeddedProcessors"/>
 	<remote name="github" fetch="https://github.com/"/>
 	<remote name="kernel.org" fetch="https://git.kernel.org/pub/scm/linux/kernel/git"/>
+	<remote name="tf.org" fetch="https://git.trustedfirmware.org/TF-A"/>
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
 	<project name="glikely/u-boot-manifest" path="scripts">
 		<linkfile src="top.mk" dest="Makefile"/>
 		<linkfile src="buildall.sh" dest="buildall.sh"/>
 	</project>
-	<project name="ARM-software/arm-trusted-firmware.git" path="arm-trusted-firmware"/>
+	<project name="trusted-firmware-a" remote="tf.org"/>
 	<project name="u-boot/u-boot" path="u-boot"/>
 	<project name="devicetree/devicetree-rebasing.git" path="devicetree-rebasing" remote="kernel.org"/>
 
