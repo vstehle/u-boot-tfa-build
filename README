@@ -26,12 +26,15 @@ and run the repo init command:
 This will clone all of the required git trees and link the Makefile
 into the root directory. To build the firmware, simply type:
 
-  $ make [TARGET=<target name>]   # Defaults to "mcbin"
+  $ make <target_name>_defconfig
+
+Where <target_name> is a U-Boot defconfig that can be found in the
+u-boot/configs directory.
 
 Patches to target projects
 --------------------------
 There are a few changes to the main projects in the ./patches directory.
-You'll want to apply those to get a working firmware image.
+You'll may need to apply those to get a working firmware image.
 
 Supported Platforms
 -------------------

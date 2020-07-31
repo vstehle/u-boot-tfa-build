@@ -4,17 +4,10 @@
 #
 # Makefile Conventions:
 # Variable names:
-# TARGET:   U-Boot configuration name; TFA, OP-TEE, and other target
-#           configuration names key off the U-Boot configuration; this is a
-#           U-Boot oriented tool after all.
 # *_PATH:   Full path to project source directories or other assets
 # *_OUTPUT: Build directories for each of the sub projects
 # *_EXTRA:  Extra parameters to the make call. Gets added to make targets, e.g.
 #           "$(MAKE) -C ${PROJECT_PATH} ... ${PROJECT_EXTRA} ..."
-
-ifndef TARGET
-  $(error TARGET is not set)
-endif
 
 # Set some defaults that can be overridden by the target  makefile include
 export DT_PATH    := $(CURDIR)/devicetree-rebasing
@@ -94,7 +87,7 @@ ifeq ($(config-targets),1)
 	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) olddefconfig
 
 PHONY += defconfig
-defconfig: ${TARGET}_defconfig ;
+defconfig: rockpro64-rk3399_defconfig ;
 
 else
 # ===========================================================================
@@ -121,7 +114,7 @@ ifndef TFA_PLAT
   $(info CONFIG_SYS_SOC=$(CONFIG_SYS_SOC))
   $(info CONFIG_SYS_BOARD=$(CONFIG_SYS_BOARD))
   $(info CONFIG_SYS_CONFIG_NAME=$(CONFIG_SYS_CONFIG_NAME))
-  $(warning TFA_PLAT is not set. Either TARGET=$(TARGET) is not yet supported)
+  $(warning TFA_PLAT is not set. Either the platform is not yet supported)
   $(error by this tool, or there is a bug)
 endif
 
@@ -131,7 +124,7 @@ TFA_EXTRA += BL33=$(UBOOT_OUTPUT)/u-boot.bin
 
 FLASH_IMAGE ?= $(TFA_OUTPUT)/$(TFA_PLAT)/release/flash-image.bin
 FLASH_IMAGE_DEPS ?= tfa/all tfa/fip
-SD_IMAGE := $(TARGET)-sdcard.img
+SD_IMAGE := $(subst ",,$(CONFIG_SYS_CONFIG_NAME))-sdcard.img
 ESP_SIZE ?= $$((64*1024*1024))
 ESP_OFFSET ?= $$((4*1024*1024))
 
