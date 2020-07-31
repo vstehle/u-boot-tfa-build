@@ -10,21 +10,21 @@
 #           "$(MAKE) -C ${PROJECT_PATH} ... ${PROJECT_EXTRA} ..."
 
 # Set some defaults that can be overridden by the target  makefile include
-export DT_PATH    := $(CURDIR)/devicetree-rebasing
-export DT_OUTPUT  := $(DT_PATH)
-export TFA_PATH   := $(CURDIR)/trusted-firmware-a
-export UBOOT_PATH := $(CURDIR)/u-boot
+DT_PATH    := $(CURDIR)/devicetree-rebasing
+DT_OUTPUT  := $(DT_PATH)
+TFA_PATH   := $(CURDIR)/trusted-firmware-a
+UBOOT_PATH := $(CURDIR)/u-boot
 
 # Give the option of building in a separate directory
 ifdef BUILD_OUTPUT
   __BUILD := $(realpath $(BUILD_OUTPUT))
-  export TFA_OUTPUT := $(__BUILD)/tfa
-  export TFA_EXTRA += BUILD_BASE=$(TFA_OUTPUT)
-  export UBOOT_OUTPUT := $(__BUILD)/u-boot
-  export UBOOT_EXTRA += KBUILD_OUTPUT=$(UBOOT_OUTPUT)
+  TFA_OUTPUT := $(__BUILD)/tfa
+  TFA_EXTRA += BUILD_BASE=$(TFA_OUTPUT)
+  UBOOT_OUTPUT := $(__BUILD)/u-boot
+  UBOOT_EXTRA += KBUILD_OUTPUT=$(UBOOT_OUTPUT)
 else
-  export TFA_OUTPUT := $(TFA_PATH)/build
-  export UBOOT_OUTPUT := $(UBOOT_PATH)
+  TFA_OUTPUT := $(TFA_PATH)/build
+  UBOOT_OUTPUT := $(UBOOT_PATH)
 endif
 
 # ===========================================================================
