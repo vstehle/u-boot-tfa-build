@@ -79,11 +79,7 @@ ifeq ($(config-targets),1)
 # in scripts/kconfig to make the *config target
 
 %config: u-boot/%config
-	echo CONFIG_CMD_BOOTEFI_HELLO=y >> $(UBOOT_OUTPUT)/.config
-	echo CONFIG_CMD_BOOTEFI_SELFTEST=y >> $(UBOOT_OUTPUT)/.config
-	echo CONFIG_CMD_NVEDIT_EFI=y >> $(UBOOT_OUTPUT)/.config
-	echo CONFIG_CMD_EFIDEBUG=y >> $(UBOOT_OUTPUT)/.config
-	echo CONFIG_CMD_GPT=y >> $(UBOOT_OUTPUT)/.config
+	$(UBOOT_PATH)/scripts/kconfig/merge_config.sh -m -O $(UBOOT_OUTPUT) $(UBOOT_OUTPUT)/.config scripts/ebbr.config
 	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) olddefconfig
 
 PHONY += defconfig
