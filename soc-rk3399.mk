@@ -19,8 +19,8 @@ u-boot/all: tfa/bl31
 UBOOT_EXTRA += BL31=$(TFA_OUTPUT)/$(TFA_PLAT)/release/bl31/bl31.elf
 
 sdimage:
-	dd if=/dev/zero of=$(SD_IMAGE) seek=32M count=0
+	dd if=/dev/zero of=$(SD_IMAGE) count=$$((32*1024*1024>>9))
 	/sbin/sgdisk -g $(SD_IMAGE)
 	/sbin/sgdisk -n 1:: $(SD_IMAGE)
-	dd if=${UBOOT_OUTPUT}/idbloader.IMAGE of=$(SD_IMG) seek=64
+	dd if=${UBOOT_OUTPUT}/idbloader.img of=$(SD_IMAGE) seek=64
 	dd if=${UBOOT_OUTPUT}/u-boot.itb of=$(SD_IMAGE) seek=16384
