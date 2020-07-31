@@ -103,29 +103,24 @@ else
 
 ifeq ($(dot-config),1)
 # Read in config
--include $(UBOOT_OUTPUT)/.config
+include $(UBOOT_OUTPUT)/.config
 
 # ===================================
 # Platform/SOC specific configuration
-ifdef CONFIG_ROCKCHIP_RK3399
-TFA_PLAT := rk3399
-UBOOT_EXTRA += BL31=$(TFA_PATH)/build/$(TFA_PLAT)/release/bl31/bl31.elf
-FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
-DTB_TARGET := src/arm64/$(CONFIG_DEFAULT_FDT_FILE)
-u-boot: tfa-bl31
+#
+# Try including platform specific configs
+# Platform specific config could be SOC, Vendor, or config
 
-include $(CURDIR)/scripts/rk3399.mk
-endif # CONFIG_ROCKCHIP_RK3399
-
-ifdef CONFIG_ARMADA_8K
-include scripts/mvebu-armada-8k.mk
-DTB_TARGET := src/arm64/marvell/$(CONFIG_DEFAULT_DEVICE_TREE).dtb
-ifeq ($(CONFIG_DEFAULT_DEVICE_TREE),"armada-8040-mcbin")
-TFA_PLAT := a80x0_mcbin
-endif
-endif # CONFIG_ARMADA_8K
+-include $(CURDIR)/scripts/vendor-$(subst ",,$(CONFIG_SYS_VENDOR)).mk
+-include $(CURDIR)/scripts/soc-$(subst ",,$(CONFIG_SYS_SOC)).mk
+-include $(CURDIR)/scripts/board-$(subst ",,$(CONFIG_SYS_BOARD)).mk
+-include $(CURDIR)/scripts/config-$(subst ",,$(CONFIG_SYS_CONFIG_NAME)).mk
 
 ifndef TFA_PLAT
+  $(info CONFIG_SYS_VENDOR=$(CONFIG_SYS_VENDOR))
+  $(info CONFIG_SYS_SOC=$(CONFIG_SYS_SOC))
+  $(info CONFIG_SYS_BOARD=$(CONFIG_SYS_BOARD))
+  $(info CONFIG_SYS_CONFIG_NAME=$(CONFIG_SYS_CONFIG_NAME))
   $(warning TFA_PLAT is not set. Either TARGET=$(TARGET) is not yet supported)
   $(error by this tool, or there is a bug)
 endif
