@@ -27,6 +27,9 @@ else
   UBOOT_OUTPUT := $(UBOOT_PATH)
 endif
 
+# Default target when none provided on command line
+all: flashimage
+
 # ===========================================================================
 # Rules shared between *config targets and build targets
 
