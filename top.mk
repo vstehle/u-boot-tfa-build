@@ -162,7 +162,7 @@ devicetree-rebasing/%.dtb:
 tfa/%:
 	${MAKE} -C ${TFA_PATH} ${TFA_EXTRA} $*
 
-tfa/fip: u-boot/all
+tfa/all tfa/fip: u-boot/all
 
 # ================================================
 # Delegate to u-boot build
