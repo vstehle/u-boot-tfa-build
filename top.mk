@@ -100,6 +100,7 @@ include $(UBOOT_OUTPUT)/.config
 # Try including platform specific configs
 # Platform specific config could be SOC, Vendor, or config
 
+-include $(CURDIR)/scripts/cpu-$(subst ",,$(CONFIG_SYS_CPU)).mk
 -include $(CURDIR)/scripts/vendor-$(subst ",,$(CONFIG_SYS_VENDOR)).mk
 -include $(CURDIR)/scripts/soc-$(subst ",,$(CONFIG_SYS_SOC)).mk
 -include $(CURDIR)/scripts/board-$(subst ",,$(CONFIG_SYS_BOARD)).mk
