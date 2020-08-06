@@ -127,11 +127,13 @@ ESP_OFFSET ?= $$((4*1024*1024))
 
 endif # ifeq ($(dot-config),1)
 
+ifneq ($(DTB_TARGET),)
 PHONY += dtb
 dtb: ${DTB_TARGET}
 	fdtput ${DT_OUTPUT}/${DTB_TARGET} -t s / u-boot-ver `cd ${UBOOT_PATH} && git describe`
 	fdtput ${DT_OUTPUT}/${DTB_TARGET} -t s / tfa-ver `cd ${TFA_PATH} && git describe`
 	fdtput ${DT_OUTPUT}/${DTB_TARGET} -t s / dt-ver `cd ${DT_PATH} && git describe`
+endif
 
 PHONY += flashimage sdimage
 
