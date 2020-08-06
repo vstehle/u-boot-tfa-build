@@ -1,6 +1,5 @@
-# SPDX-License-Identifier: GPL-2.0+
-#
-# Copyright (C) Arm Limited, 2020
+.. SPDX-License-Identifier: GPL-2.0+
+.. Copyright (C) Arm Limited, 2020
 
 U-Boot Image Builder Manifest
 =============================
