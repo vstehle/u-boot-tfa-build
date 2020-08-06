@@ -16,7 +16,7 @@ TFA_PATH   := $(CURDIR)/trusted-firmware-a
 UBOOT_PATH := $(CURDIR)/u-boot
 
 # Give the option of building in a separate directory
-ifdef BUILD_OUTPUT
+ifneq ($(BUILD_OUTPUT),)
   __BUILD := $(realpath $(BUILD_OUTPUT))
   TFA_OUTPUT := $(__BUILD)/tfa
   TFA_EXTRA += BUILD_BASE=$(TFA_OUTPUT)
@@ -106,7 +106,7 @@ include $(UBOOT_OUTPUT)/.config
 -include $(CURDIR)/scripts/board-$(subst ",,$(CONFIG_SYS_BOARD)).mk
 -include $(CURDIR)/scripts/config-$(subst ",,$(CONFIG_SYS_CONFIG_NAME)).mk
 
-ifndef TFA_PLAT
+ifeq ($(TFA_PLAT),)
   $(info CONFIG_SYS_VENDOR=$(CONFIG_SYS_VENDOR))
   $(info CONFIG_SYS_SOC=$(CONFIG_SYS_SOC))
   $(info CONFIG_SYS_BOARD=$(CONFIG_SYS_BOARD))
