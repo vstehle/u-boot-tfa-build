@@ -3,7 +3,7 @@
 # Copyright (C) Arm Limited, 2020
 
 U-Boot Image Builder Manifest
------------------------------
+=============================
 
 This is a simple tool for build Arm firmware images from U-Boot,
 Trusted Firmware A, and the Linux devicetree repo. It uses the
@@ -16,7 +16,7 @@ This tool uses the git 'repo' tool to build firmware.
 Install repo first
 
 To initialize the build environment, create a new working directory
-and run the repo init command:
+and run the repo init command::
 
   $ mkdir firmware-working
   $ cd firmware-working
@@ -24,12 +24,17 @@ and run the repo init command:
   $ repo sync
 
 This will clone all of the required git trees and link the Makefile
-into the root directory. To build the firmware, simply type:
+into the root directory. To build the firmware, simply type::
 
   $ make <target_name>_defconfig
+  $ make
 
 Where <target_name> is a U-Boot defconfig that can be found in the
 u-boot/configs directory.
+
+The QEMU config also provides a ``qemu`` target to run the image::
+
+  $ make qemu
 
 Patches to target projects
 --------------------------
@@ -38,6 +43,10 @@ You'll may need to apply those to get a working firmware image.
 
 Supported Platforms
 -------------------
-1. Macchiato-bin
-3. RockPro64 (incomplete)
 
+The following platforms should work out of the box.
+More to come as this tool matures.
+
+1. Macchiato-bin ``mvebu_mcbin-88f8040_defconfig``
+2. RockPro64 ``rockpro64-rk3399_defconfig``
+3. QEMU aarch64 ``qemu_arm64_defconfig``
