@@ -41,7 +41,7 @@ all: flashimage
 # Detect when mixed targets is specified, and make a second invocation
 # of make so .config is not included in this case either (for *config).
 
-no-dot-config-targets := clean
+no-dot-config-targets := clean mrproper distclean u-boot/% tfa/%clean devicetree/clean
 
 config-targets := 0
 mixed-targets  := 0
@@ -144,10 +144,14 @@ flashimage ${FLASH_IMAGE}: ${FLASH_IMAGE_DEPS}
 
 sdimage: flashimage
 
-PHONY += clean
-clean: u-boot/mrproper
-	cd $(TFA_PATH) && git clean -fdx
-	cd $(DT_PATH) && git clean -fdx
+PHONY += clean mrproper distclean
+clean: u-boot/clean tfa/clean devicetree/clean
+	cd $(CURDIR)/mv-ddr && git clean -fdx
+
+mrproper: u-boot/mrproper tfa/distclean devicetree/clean
+	cd $(CURDIR)/mv-ddr && git clean -fdx
+
+distclean: u-boot/distclean tfa/distclean devicetree/clean
 	cd $(CURDIR)/mv-ddr && git clean -fdx
 
 endif #ifeq ($(config-targets),1)
@@ -157,8 +161,9 @@ endif #ifeq ($(config-targets),1)
 
 # ================================================
 # Delegate to devicetree-rebasing build
-devicetree-rebasing/%.dtb:
-	${MAKE} -C ${DT_PATH} $*.dtb
+#
+devicetree/%:
+	${MAKE} -C ${DT_PATH} $*
 
 # ================================================
 # Delegate to trusted-firmware-a build
