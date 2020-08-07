@@ -30,6 +30,31 @@ endif
 # Default target when none provided on command line
 all: flashimage
 
+help:
+	@echo  'Cleaning targets:'
+	@echo  '  clean		  - Remove most generated files but keep the config'
+	@echo  '  mrproper	  - Remove all generated files + config + various backup files'
+	@echo  ''
+	@echo  'Configuration targets:'
+	@$(MAKE) -C $(UBOOT_PATH) -f $(UBOOT_PATH)/scripts/kconfig/Makefile --no-print-directory help
+	@echo  ''
+	@echo  '  Only a subset of U-Boot defconfigs will work with this tool. For this tool'
+	@echo  '  to work, $$TFA_PLAT needs to be set. See scripts/*.mk for examples. Adding'
+	@echo  '  support for a new platform requires inspecting the U-Boot configuration and'
+	@echo  '  choosing the correct $$TFA_PLAT value.'
+	@echo  ''
+	@echo  'Project targets:'
+	@echo  ''
+	@echo  '  u-boot/<name>		  - Build U-Boot target <name>'
+	@echo  '  tfa/<name>		  - Build Trusted Firmware target <name> *'
+	@echo  '  devicetree/<name>	  - Build Devicetree target <name> *'
+	@echo  '    * Can only be called if U-Boot is configured'
+	@echo  ''
+	@echo  'Other targets:'
+	@echo  ''
+	@echo  '  help		  - This help text'
+	@echo  '  info		  - Display details about the build configuration'
+
 # ===========================================================================
 # Rules shared between *config targets and build targets
 
@@ -41,7 +66,7 @@ all: flashimage
 # Detect when mixed targets is specified, and make a second invocation
 # of make so .config is not included in this case either (for *config).
 
-no-dot-config-targets := clean mrproper distclean u-boot/% tfa/%clean devicetree/clean
+no-dot-config-targets := clean mrproper distclean u-boot/% tfa/%clean devicetree/clean help
 
 config-targets := 0
 mixed-targets  := 0
@@ -95,7 +120,7 @@ else
 
 ifeq ($(dot-config),1)
 # Read in config
-include $(UBOOT_OUTPUT)/.config
+-include $(UBOOT_OUTPUT)/.config
 
 # ===================================
 # Platform/SOC specific configuration
@@ -103,19 +128,34 @@ include $(UBOOT_OUTPUT)/.config
 # Try including platform specific configs
 # Platform specific config could be SOC, Vendor, or config
 
--include $(CURDIR)/scripts/cpu-$(subst ",,$(CONFIG_SYS_CPU)).mk
--include $(CURDIR)/scripts/vendor-$(subst ",,$(CONFIG_SYS_VENDOR)).mk
--include $(CURDIR)/scripts/soc-$(subst ",,$(CONFIG_SYS_SOC)).mk
--include $(CURDIR)/scripts/board-$(subst ",,$(CONFIG_SYS_BOARD)).mk
--include $(CURDIR)/scripts/config-$(subst ",,$(CONFIG_SYS_CONFIG_NAME)).mk
+INCLUDE_MK := scripts/cpu-$(subst ",,$(CONFIG_SYS_CPU)).mk
+INCLUDE_MK += scripts/vendor-$(subst ",,$(CONFIG_SYS_VENDOR)).mk
+INCLUDE_MK += scripts/soc-$(subst ",,$(CONFIG_SYS_SOC)).mk
+INCLUDE_MK += scripts/board-$(subst ",,$(CONFIG_SYS_BOARD)).mk
+INCLUDE_MK += scripts/config-$(subst ",,$(CONFIG_SYS_CONFIG_NAME)).mk
+include $(wildcard $(INCLUDE_MK))
 
+ifeq ($(MAKECMDGOALS),info)
+info:
+	@echo 'U-Boot Config:'
+	@echo '  CONFIG_SYS_CPU=$(subst ",,$(CONFIG_SYS_CPU))'
+	@echo '  CONFIG_SYS_VENDOR=$(subst ",,$(CONFIG_SYS_VENDOR))'
+	@echo '  CONFIG_SYS_SOC=$(subst ",,$(CONFIG_SYS_SOC))'
+	@echo '  CONFIG_SYS_BOARD=$(subst ",,$(CONFIG_SYS_BOARD))'
+	@echo '  CONFIG_SYS_CONFIG_NAME=$(subst ",,$(CONFIG_SYS_CONFIG_NAME))'
+	@echo 'Derived Config:'
+	@echo '  TFA_PLAT=$(TFA_PLAT)'
+	@echo '  FLASH_IMAGE=$(FLASH_IMAGE)'
+	@echo 'Included platform configuration files:'
+	@$(foreach inc, $(wildcard $(INCLUDE_MK)), echo '  $(inc)';)
+else
 ifeq ($(TFA_PLAT),)
-  $(info CONFIG_SYS_VENDOR=$(CONFIG_SYS_VENDOR))
-  $(info CONFIG_SYS_SOC=$(CONFIG_SYS_SOC))
-  $(info CONFIG_SYS_BOARD=$(CONFIG_SYS_BOARD))
-  $(info CONFIG_SYS_CONFIG_NAME=$(CONFIG_SYS_CONFIG_NAME))
-  $(warning TFA_PLAT is not set. Either the platform is not yet supported)
-  $(error by this tool, or there is a bug)
+  $(info $$TFA_PLAT is not set. Either U-Boot is not configured, the platform is not)
+  $(info yet supported, or there is a bug. Use \'make info\' to see the current)
+  $(info configuration)
+  $(info )
+  $(error Invalid configuration)
+endif
 endif
 
 TFA_EXTRA += PLAT=$(TFA_PLAT)

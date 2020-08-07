@@ -5,8 +5,6 @@
 # Build config for RockPro64
 # Inspired by https://stikonas.eu/wordpress/2019/09/15/blobless-boot-with-rockpro64/
 
-$(info Using Rockchip RK3399 support from soc-$(subst ",,$(CONFIG_SYS_BOARD)).mk)
-
 FLASH_IMAGE_DEPS := u-boot/all
 TFA_PLAT := $(CONFIG_SYS_SOC)
 FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
