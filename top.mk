@@ -12,17 +12,24 @@
 # Set some defaults that can be overridden by the target  makefile include
 DT_PATH    := $(CURDIR)/devicetree-rebasing
 DT_OUTPUT  := $(DT_PATH)
+EDK2_PATH  := $(CURDIR)/edk2
+EDK2_PLATFORMS_PATH := $(CURDIR)/edk2-platforms
+OPTEE_PATH := $(CURDIR)/optee_os
 TFA_PATH   := $(CURDIR)/trusted-firmware-a
 UBOOT_PATH := $(CURDIR)/u-boot
 
 # Give the option of building in a separate directory
 ifneq ($(BUILD_OUTPUT),)
   __BUILD := $(realpath $(BUILD_OUTPUT))
+  EDK2_OUTPUT := $(__BUILD)/edk2
+  OPTEE_OUTPUT := $(__BUILD)/optee
   TFA_OUTPUT := $(__BUILD)/tfa
   TFA_EXTRA += BUILD_BASE=$(TFA_OUTPUT)
   UBOOT_OUTPUT := $(__BUILD)/u-boot
   UBOOT_EXTRA += KBUILD_OUTPUT=$(UBOOT_OUTPUT)
 else
+  EDK2_OUTPUT := $(EDK2_PATH)/Build
+  OPTEE_OUTPUT := $(OPTEE_PATH)/Build
   TFA_OUTPUT := $(TFA_PATH)/build
   UBOOT_OUTPUT := $(UBOOT_PATH)
 endif
@@ -158,6 +165,47 @@ ifeq ($(TFA_PLAT),)
 endif
 endif
 
+# If Standalone-MM is required, set some basic configuration.
+ifeq ($(CONFIG_USE_STMM),y)
+
+# EDK2 Environmental variables; easiest to export these
+export WORKSPACE=$(EDK2_OUTPUT)
+export PACKAGES_PATH=$(EDK2_PATH):$(EDK2_PLATFORMS_PATH)
+export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE)
+STMM_PLATFORM="Platform/StMMRpmb/PlatformStandaloneMm.dsc"
+
+# StMM requires some OPTEE config options
+CONFIG_OPTEE=y
+OPTEE_EXTRA += CFG_ARM64_core=y
+OPTEE_EXTRA += CFG_STMM_PATH=$(EDK2_OUTPUT)/QemuVirtMmStandalone/DEBUG_GCC5/FV/BL32_AP-MM.fd
+OPTEE_EXTRA += CFG_RPMB_FS=y
+OPTEE_EXTRA += CFG_RPMB_FS_DEV_ID=1
+OPTEE_EXTRA += CFG_RPMB_WRITE_KEY=1
+OPTEE_EXTRA += CFG_TEE_CORE_LOG_LEVEL=3
+OPTEE_EXTRA += CFG_CORE_HEAP_SIZE=524288
+OPTEE_EXTRA += CFG_CORE_ASLR=n
+OPTEE_EXTRA += CFG_TA_ASLR=n
+endif
+
+# If OP-TEE support is enabled, add in the OP-TEE build and dependencies
+ifeq ($(CONFIG_OPTEE),y)
+ifeq ($(OPTEE_PLATFORM),)
+  $(info $$OPTEE_PLATFORM is not set, but CONFIG_OPTEE=y. Either the platform is not)
+  $(info yet supported, or there is a bug. Use \'make info\' to see the current)
+  $(info configuration)
+  $(info )
+  $(error Invalid configuration)
+endif
+TFA_EXTRA += BL32=$(OPTEE_OUTPUT)/tee-header_v2.bin
+TFA_EXTRA += BL32_EXTRA1=$(OPTEE_OUTPUT)/tee-pager_v2.bin
+TFA_EXTRA += BL32_EXTRA2=$(OPTEE_OUTPUT)/tee-pageable_v2.bin
+TFA_EXTRA += BL32_RAM_LOCATION=tdram
+TFA_EXTRA += SPD=opteed
+
+tfa/all tfa/fip: optee/all
+endif
+
+# Default Trusted Firmware configuration settings
 TFA_EXTRA += PLAT=$(TFA_PLAT)
 TFA_EXTRA += LOG_LEVEL=20
 TFA_EXTRA += BL33=$(UBOOT_OUTPUT)/u-boot.bin
@@ -206,10 +254,24 @@ devicetree/%:
 	${MAKE} -C ${DT_PATH} $*
 
 # ================================================
+# The Standalone-MM build
+ifeq ($(CONFIG_USE_STMM),y)
+BL32_AP_MM.fd:
+	set -e; source $(EDK2_PATH)/edksetup.sh; $(MAKE) -C $(EDK2_PATH)/BaseTools; build -p $(STMM_PLATFORM) -b RELEASE -a AARCH64 -t GCC5 -D DO_X86EMU=TRUE
+	cp $(EDK2_OUTPUT)/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd .
+endif
+
+# ================================================
+# Delegate to op-tee build
+optee/%:
+	${MAKE} -C ${OPTEE_PATH} ${OPTEE_EXTRA} $*
+
+# ================================================
 # Delegate to trusted-firmware-a build
 tfa/%:
 	${MAKE} -C ${TFA_PATH} ${TFA_EXTRA} $*
 
+optee/all: stmm/all
 tfa/all tfa/fip: u-boot/all
 
 # ================================================

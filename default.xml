@@ -3,16 +3,27 @@
 	<remote name="github" fetch="https://github.com/"/>
 	<remote name="kernel.org" fetch="https://git.kernel.org/pub/scm/linux/kernel/git"/>
 	<remote name="tf.org" fetch="https://git.trustedfirmware.org/TF-A"/>
+	<remote name="linaro-ilias" fetch="https://git.linaro.org/people/ilias.apalodimas"/>
+
 	<default revision="refs/heads/master" remote="github" sync-j="4"/>
 
 	<project name="glikely/u-boot-manifest" path="scripts">
 		<linkfile src="top.mk" dest="Makefile"/>
 		<linkfile src="buildall.sh" dest="buildall.sh"/>
 	</project>
+
+	<!-- OP-TEE -->
+	<project path="optee_os"	remote="github" name="apalos/optee_os"/>
+
+	<!-- EDK2 for StandaloneMM -->
+	<project name="edk2"		remote="linaro-ilias" revision="stmm_ffa" sync-s="true"/>
+	<project name="edk2-platforms"	remote="linaro-ilias" revision="stmm_rpmb_ffa"/>
+
 	<project name="trusted-firmware-a" remote="tf.org"/>
 	<project name="u-boot/u-boot" path="u-boot"/>
 	<project name="devicetree/devicetree-rebasing.git" path="devicetree-rebasing" remote="kernel.org"/>
 
+	<!-- Platform specific source and binaries -->
 	<project name="binaries-marvell" remote="marvell" path="binaries-marvell" revision="refs/heads/binaries-marvell-armada-18.12"/>
 	<project name="mv-ddr-marvell" remote="marvell" path="mv-ddr" revision="refs/heads/mv_ddr-armada-atf-mainline"/>
 </manifest>
