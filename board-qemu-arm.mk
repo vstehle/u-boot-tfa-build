@@ -5,16 +5,10 @@ OPTEE_PLATFORM := vexpress-qemu_armv8a
 UBOOT_EXTRA_CONFIGS += scripts/qemu_arm64_tfa.config
 FLASH_IMAGE := nor_flash.bin
 
-#USE_STMM := y
-USE_OPTEE := y
-
 ifneq ($(CONFIG_TFABOOT)$(CONFIG_POSITION_INDEPENDENT),yy)
 tweakconfig:
 	echo "CONFIG_POSITION_INDEPENDENT=y" >> $(UBOOT_OUTPUT)/.config
 	echo "CONFIG_TFABOOT=y" >> $(UBOOT_OUTPUT)/.config
-ifeq ($(USE_OPTEE),y)
-	echo "CONFIG_OPTEE=y" >> $(UBOOT_OUTPUT)/.config
-endif
 	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) olddefconfig
 
 u-boot/all u-boot/u-boot.bin: tweakconfig

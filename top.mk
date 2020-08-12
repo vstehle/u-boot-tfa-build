@@ -153,11 +153,11 @@ info:
 	@echo '  CONFIG_SYS_SOC=$(subst ",,$(CONFIG_SYS_SOC))'
 	@echo '  CONFIG_SYS_BOARD=$(subst ",,$(CONFIG_SYS_BOARD))'
 	@echo '  CONFIG_SYS_CONFIG_NAME=$(subst ",,$(CONFIG_SYS_CONFIG_NAME))'
+	@echo '  CONFIG_OPTEE=$(subst ",,$(CONFIG_OPTEE))'
+	@echo '  CONFIG_EFI_MM_COMM_TEE=$(subst ",,$(CONFIG_EFI_MM_COMM_TEE))'
 	@echo 'Derived Config:'
 	@echo '  TFA_PLAT=$(TFA_PLAT)'
 	@echo '  FLASH_IMAGE=$(FLASH_IMAGE)'
-	@echo "  USE_OPTEE=$(USE_OPTEE)  # Build OPTEE if 'y'"
-	@echo "  USE_STMM=$(USE_STMM)    # Builds Standalone MM if 'y'"
 	@echo 'Included platform configuration files:'
 	@$(foreach inc, $(wildcard $(INCLUDE_MK)), echo '  $(inc)';)
 else
@@ -168,7 +168,7 @@ ifeq ($(TFA_PLAT),)
   $(info )
   $(error Invalid configuration)
 endif
-ifeq ($(USE_OPTEE)_$(OPTEE_PLATFORM),y_)
+ifeq ($(CONFIG_OPTEE)$(OPTEE_PLATFORM),y)
   $(info OPTEE is enabled, but $$OPTEE_PLATFORM is not set. Either the platform is not)
   $(info yet supported, or there is a bug. Use \'make info\' to see the current)
   $(info configuration)
@@ -177,9 +177,10 @@ ifeq ($(USE_OPTEE)_$(OPTEE_PLATFORM),y_)
 endif
 endif
 
+ifeq ($(CONFIG_OPTEE),y)
 # ----------------------------------------------------------------------
 # Standalone-MM build configuration
-ifeq ($(USE_STMM),y)
+ifeq ($(CONFIG_EFI_MM_COMM_TEE),y)
 
 # EDK2 Environmental variables; easiest to export these
 export WORKSPACE=$(CURDIR)
@@ -198,11 +199,10 @@ edk2/BaseTools:
 stmm/all: edk2/BaseTools
 	source $(EDK2_PATH)/edksetup.sh && build -p $(ACTIVE_PLATFORM) -b DEBUG -a AARCH64 -t GCC5 -D DO_X86EMU=TRUE
 
-endif # ifeq($(USE_STMM),y)
+endif # ifeq($(CONFIG_EFI_MM_COMM_TEE),y)
 
 # ----------------------------------------------------------------------
 # OP-TEE build configuration
-ifeq ($(USE_OPTEE),y)
 OPTEE_EXTRA += ARCH=arm
 OPTEE_EXTRA += CROSS_COMPILE32=arm-linux-gnueabihf-
 OPTEE_EXTRA += PLATFORM=$(OPTEE_PLATFORM)
@@ -229,7 +229,7 @@ tfa/all tfa/fip: optee/all
 optee/%:
 	${MAKE} -C ${OPTEE_PATH} ${OPTEE_EXTRA} $*
 
-endif # ifeq($(USE_OPTEE),y)
+endif # ifeq($(CONFIG_OPTEE),y)
 
 # Default Trusted Firmware configuration settings
 TFA_EXTRA += PLAT=$(TFA_PLAT)
