@@ -180,7 +180,7 @@ endif
 ifeq ($(USE_STMM),y)
 
 # EDK2 Environmental variables; easiest to export these
-export WORKSPACE=$(EDK2_OUTPUT)
+export WORKSPACE=$(CURDIR)
 export PACKAGES_PATH=$(EDK2_PATH):$(EDK2_PLATFORMS_PATH)
 export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE)
 export ACTIVE_PLATFORM=Platform/StMMRpmb/PlatformStandaloneMm.dsc
