@@ -23,7 +23,7 @@ UBOOT_PATH := $(CURDIR)/u-boot
 # Give the option of building in a separate directory
 ifneq ($(BUILD_OUTPUT),)
   __BUILD := $(realpath $(BUILD_OUTPUT))
-  EDK2_OUTPUT := $(__BUILD)/edk2
+  EDK2_OUTPUT := $(__BUILD)/edk2/Build
   OPTEE_OUTPUT := $(__BUILD)/optee_os
   OPTEE_EXTRA += O=$(OPTEE_OUTPUT)
   TFA_OUTPUT := $(__BUILD)/tfa
@@ -31,7 +31,7 @@ ifneq ($(BUILD_OUTPUT),)
   UBOOT_OUTPUT := $(__BUILD)/u-boot
   UBOOT_EXTRA += KBUILD_OUTPUT=$(UBOOT_OUTPUT)
 else
-  EDK2_OUTPUT := $(EDK2_PATH)
+  EDK2_OUTPUT := $(CURDIR)/Build
   OPTEE_OUTPUT := $(OPTEE_PATH)/out
   TFA_OUTPUT := $(TFA_PATH)/build
   UBOOT_OUTPUT := $(UBOOT_PATH)
