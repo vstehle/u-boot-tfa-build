@@ -226,11 +226,11 @@ TFA_EXTRA += BL32_EXTRA2=$(OPTEE_OUTPUT)/arm-plat-vexpress/core/tee-pageable_v2.
 TFA_EXTRA += BL32_RAM_LOCATION=tdram
 TFA_EXTRA += SPD=opteed
 
-tfa/all tfa/fip: optee/all
+tfa/all tfa/fip: optee_os/all
 
 # ================================================
 # Delegate optee targets to optee Makefile
-optee/%:
+optee_os/%:
 	${MAKE} -C ${OPTEE_PATH} ${OPTEE_EXTRA} $*
 
 endif # ifeq($(CONFIG_OPTEE),y)
@@ -263,7 +263,7 @@ flashimage ${FLASH_IMAGE}: ${FLASH_IMAGE_DEPS}
 sdimage: flashimage
 
 PHONY += clean mrproper distclean
-clean: u-boot/clean tfa/clean devicetree/clean
+clean: u-boot/clean tfa/distclean devicetree/clean optee_os/clean
 	cd $(CURDIR)/mv-ddr && git clean -fdx
 
 mrproper: u-boot/mrproper tfa/distclean devicetree/clean
@@ -285,7 +285,7 @@ devicetree/%:
 
 # ================================================
 # Delegate to op-tee clean target
-optee/clean:
+optee_os/clean:
 	${MAKE} -C ${OPTEE_PATH} clean
 
 # ================================================
