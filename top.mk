@@ -190,9 +190,11 @@ OPTEE_EXTRA += CFG_STMM_PATH=$(EDK2_OUTPUT)/QemuVirtMmStandalone/DEBUG_GCC5/FV/B
 
 optee/all: stmm/all
 
-stmm/all:
-	source $(EDK2_PATH)/edksetup.sh && $(MAKE) -C $(EDK2_PATH)/BaseTools && build -p $(ACTIVE_PLATFORM) -b DEBUG -a AARCH64 -t GCC5 -n 4 -D DO_X86EMU=TRUE
+edk2/BaseTools:
+	source $(EDK2_PATH)/edksetup.sh && $(MAKE) -C $(EDK2_PATH)/BaseTools
 
+stmm/all: edk2/BaseTools
+	source $(EDK2_PATH)/edksetup.sh && build -p $(ACTIVE_PLATFORM) -b DEBUG -a AARCH64 -t GCC5 -D DO_X86EMU=TRUE
 
 endif # ifeq($(USE_STMM),y)
 
