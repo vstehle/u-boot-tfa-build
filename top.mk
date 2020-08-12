@@ -192,11 +192,12 @@ export PACKAGES_PATH=$(EDK2_PATH):$(EDK2_PLATFORMS_PATH)
 export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE)
 export ACTIVE_PLATFORM=Platform/StMMRpmb/PlatformStandaloneMm.dsc
 
+STMM_FD := $(EDK2_OUTPUT)/MmStandaloneRpmb/DEBUG_GCC5/FV/BL32_AP_MM.fd
+
 # Tell optee where to find StMM
-OPTEE_EXTRA += CFG_STMM_PATH=$(EDK2_OUTPUT)/QemuVirtMmStandalone/DEBUG_GCC5/FV/BL32_AP-MM.fd
+OPTEE_EXTRA += CFG_STMM_PATH=$(STMM_FD)
 
-optee/all: stmm/all
-
+optee_os/all: stmm/all $(STMM_FD)
 edk2/BaseTools:
 	source $(EDK2_PATH)/edksetup.sh && $(MAKE) -C $(EDK2_PATH)/BaseTools
 
