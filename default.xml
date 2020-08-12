@@ -13,7 +13,7 @@
 	</project>
 
 	<!-- OP-TEE -->
-	<project path="optee_os"	remote="github" name="apalos/optee_os"/>
+	<project path="optee_os"	remote="github" name="apalos/optee_os" revision="stmm_pr"/>
 
 	<!-- EDK2 for StandaloneMM -->
 	<project name="edk2"		remote="linaro-ilias" revision="stmm_ffa" sync-s="true"/>
