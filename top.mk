@@ -116,6 +116,10 @@ ifeq ($(config-targets),1)
 # *config targets only - make sure prerequisites are updated, and descend
 # in scripts/kconfig to make the *config target
 
+addstmmconfig:
+	$(UBOOT_PATH)/scripts/kconfig/merge_config.sh -m -O $(UBOOT_OUTPUT) $(UBOOT_OUTPUT)/.config scripts/stmm.config
+	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) olddefconfig
+
 %config: u-boot/%config
 	$(UBOOT_PATH)/scripts/kconfig/merge_config.sh -m -O $(UBOOT_OUTPUT) $(UBOOT_OUTPUT)/.config scripts/ebbr.config
 	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) olddefconfig
