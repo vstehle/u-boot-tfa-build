@@ -156,6 +156,8 @@ info:
 	@echo 'Derived Config:'
 	@echo '  TFA_PLAT=$(TFA_PLAT)'
 	@echo '  FLASH_IMAGE=$(FLASH_IMAGE)'
+	@echo "  USE_OPTEE=$(USE_OPTEE)  # Build OPTEE if 'y'"
+	@echo "  USE_STMM=$(USE_STMM)    # Builds Standalone MM if 'y'"
 	@echo 'Included platform configuration files:'
 	@$(foreach inc, $(wildcard $(INCLUDE_MK)), echo '  $(inc)';)
 else
