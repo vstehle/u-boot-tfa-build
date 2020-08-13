@@ -1,18 +1,21 @@
 .. SPDX-License-Identifier: GPL-2.0+
 .. Copyright (C) Arm Limited, 2020
 
-U-Boot Image Builder Manifest
-=============================
+U-Boot w/ Trusted Firmware Image Builder
+========================================
 
-This is a simple tool for build Arm firmware images from U-Boot,
-Trusted Firmware A, and the Linux devicetree repo. It uses the
-git 'repo' tool to clone a copy of each project and a Makefile
-to build for various Arm targets.
+This is a simple tool for build Arm firmware images from U-Boot, Trusted
+Firmware A, and the Linux devicetree repo.
+It uses the git 'repo' tool to clone a copy of each project and a Makefile to
+build for various Arm targets.
 
 Using this tool
 ---------------
-This tool uses the git 'repo' tool to build firmware.
-Install repo first
+It is best to use this tool with the `u-boot-manifest` repo to fetch all the required source repositories.
+Use the git `repo` tool to fetch all the projects listed in the manifest and
+create the required symlinks.
+Install repo first.
+Most linux distros have repo packaged.
 
 To initialize the build environment, create a new working directory
 and run the repo init command::
