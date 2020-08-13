@@ -7,6 +7,7 @@
 
 FLASH_IMAGE_DEPS := u-boot/all
 TFA_PLAT := $(CONFIG_SYS_SOC)
+OPTEE_PLATFORM := rk3399
 FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
 
 # On the rk3399, U-Boot instead of TF-A builds the final firmware package, and

@@ -4,6 +4,8 @@
 
 $(info Using Marvell Armada 8K support from board-$(subst ",,$(CONFIG_SYS_BOARD)).mk)
 
+OPTEE_PLATFORM=marvell-armada7k8k
+
 # Use precompiled Marvel BL2 binary
 TFA_EXTRA += SCP_BL2=${CURDIR}/binaries-marvell/mrvl_scp_bl2.img
 
