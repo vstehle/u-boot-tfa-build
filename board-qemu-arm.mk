@@ -31,14 +31,18 @@ ifeq ($(CONFIG_OPTEE),y)
 endif
 	cp $(UBOOT_OUTPUT)/u-boot.bin output/bl33.bin
 
+# Core QEMU configuration.
+QEMU_BASE_CONFIG += -machine virt,secure=on -cpu cortex-a57
+QEMU_BASE_CONFIG += -smp 2 -m 1024 -d unimp -monitor null -no-acpi
+QEMU_BASE_CONFIG += -nographic
+QEMU_BASE_CONFIG += -serial stdio  # Non-secure; u-boot console
+QEMU_BASE_CONFIG += -serial tcp::5000,server,nowait # Secure; optee
+ifneq ($(VIRTDISK),)
+QEMU_BASE_CONFIG += -drive if=virtio,format=raw,file=$(VIRTDISK)
+endif
+
 qemu-fip:
-	qemu-system-aarch64 -nographic -machine virt,secure=on -cpu cortex-a57 \
-		-no-acpi -smp 2 -m 1024 -bios $(FLASH_IMAGE) -d unimp \
-		-monitor null -serial stdio -serial tcp::5000,server,nowait
+	qemu-system-aarch64 $(QEMU_BASE_CONFIG) -bios $(FLASH_IMAGE) $(QEMU_EXTRA)
 
 qemu-semihosting:
-	cd output && qemu-system-aarch64 -nographic -machine virt,secure=on -cpu cortex-a57 \
-		-no-acpi -smp 2 -m 1024 -bios bl1.bin -d unimp \
-		-monitor null -serial stdio -serial tcp::5000,server,nowait \
-		-semihosting-config enable,target=native
-
+	cd output && qemu-system-aarch64 $(QEMU_BASE_CONFIG) -bios bl1.bin -semihosting-config enable,target=native $(QEMU_EXTRA)
