@@ -24,9 +24,11 @@ all: semihosting
 semihosting: tfa/all
 	mkdir -p output
 	cp $(TFA_OUTPUT)/$(TFA_PLAT)/release/*.bin output
+ifeq ($(CONFIG_OPTEE),y)
 	cp $(OPTEE_OUTPUT)/arm-plat-vexpress/core/tee-header_v2.bin output/bl32.bin
 	cp $(OPTEE_OUTPUT)/arm-plat-vexpress/core/tee-pager_v2.bin output/bl32_extra1.bin
 	cp $(OPTEE_OUTPUT)/arm-plat-vexpress/core/tee-pageable_v2.bin output/bl32_extra2.bin
+endif
 	cp $(UBOOT_OUTPUT)/u-boot.bin output/bl33.bin
 
 qemu-fip:
