@@ -7,7 +7,8 @@
 
 FLASH_IMAGE_DEPS := u-boot/all
 TFA_PLAT := $(CONFIG_SYS_SOC)
-OPTEE_PLATFORM := rk3399
+OPTEE_PLATFORM := rockchip
+OPTEE_EXTRA += PLATFORM_FLAVOR=rk3399
 FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
 
 # On the rk3399, U-Boot instead of TF-A builds the final firmware package, and
@@ -15,6 +16,12 @@ FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
 # U-Boot depends on tfa/bl31, and the BL31 image is passed to the U-Boot build
 
 u-boot/all: tfa/bl31
+
+ifeq ($(CONFIG_OPTEE),y)
+UBOOT_EXTRA += TEE=$(OPTEE_OUTPUT)/arm-plat-rockchip/core/tee.elf
+u-boot/all: optee_os/all
+endif
+
 UBOOT_EXTRA += BL31=$(TFA_OUTPUT)/$(TFA_PLAT)/release/bl31/bl31.elf
 
 sdimage:
