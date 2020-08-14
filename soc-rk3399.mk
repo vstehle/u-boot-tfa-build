@@ -24,6 +24,7 @@ endif
 
 UBOOT_EXTRA += BL31=$(TFA_OUTPUT)/$(TFA_PLAT)/release/bl31/bl31.elf
 
+all: sdimage
 sdimage:
 	dd if=/dev/zero of=$(SD_IMAGE) count=$$((32*1024*1024>>9))
 	/sbin/sgdisk -g $(SD_IMAGE)
