@@ -5,6 +5,8 @@ OPTEE_PLATFORM := vexpress-qemu_armv8a
 UBOOT_EXTRA_CONFIGS += scripts/qemu_arm64_tfa.config
 FLASH_IMAGE := nor_flash.bin
 
+OPTEE_EXTRA += CFG_RPMB_FS_DEV_ID=1
+
 ifneq ($(CONFIG_TFABOOT)$(CONFIG_POSITION_INDEPENDENT),yy)
 tweakconfig:
 	echo "CONFIG_POSITION_INDEPENDENT=y" >> $(UBOOT_OUTPUT)/.config
