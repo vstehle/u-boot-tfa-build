@@ -87,7 +87,7 @@ help:
 # Detect when mixed targets is specified, and make a second invocation
 # of make so .config is not included in this case either (for *config).
 
-no-dot-config-targets := clean mrproper distclean u-boot/% tfa/%clean devicetree/clean help
+no-dot-config-targets := clean mrproper distclean u-boot/%clean u-boot/mrproper u-boot/%config tfa/%clean devicetree/clean help
 
 config-targets := 0
 mixed-targets  := 0
