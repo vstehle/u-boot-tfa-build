@@ -17,6 +17,13 @@ ifeq ($(CONFIG_DEFAULT_DEVICE_TREE),"armada-8040-mcbin")
 TFA_PLAT := a80x0_mcbin
 endif
 
+mv-ddr-clean:
+	cd $(CURDIR)/mv-ddr && git clean -fdx
+
+clean: mv-ddr-clean
+mrproper: mv-ddr-clean
+distclean: mv-ddr-clean
+
 sdimage: $(FLASH_IMAGE)
 	dd if=/dev/zero of=$(SD_IMAGE) count=$$((128*1024*1024>>9))
 	echo "label: dos\n$$(($(ESP_OFFSET)>>9)) - 0xef -" | /sbin/sfdisk $(SD_IMAGE)

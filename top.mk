@@ -275,13 +275,8 @@ sdimage: flashimage
 
 PHONY += clean mrproper distclean
 clean: u-boot/clean tfa/distclean devicetree/clean optee_os/clean
-	cd $(CURDIR)/mv-ddr && git clean -fdx
-
-mrproper: u-boot/mrproper tfa/distclean devicetree/clean
-	cd $(CURDIR)/mv-ddr && git clean -fdx
-
-distclean: u-boot/distclean tfa/distclean devicetree/clean
-	cd $(CURDIR)/mv-ddr && git clean -fdx
+mrproper: u-boot/mrproper tfa/distclean devicetree/clean optee_os/clean
+distclean: u-boot/distclean tfa/distclean devicetree/clean optee_os/clean
 
 endif #ifeq ($(config-targets),1)
 
