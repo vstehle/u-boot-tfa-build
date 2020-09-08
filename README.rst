@@ -52,3 +52,6 @@ More to come as this tool matures.
 1. Macchiato-bin ``mvebu_mcbin-88f8040_defconfig``
 2. RockPro64 ``rockpro64-rk3399_defconfig``
 3. QEMU aarch64 ``qemu_arm64_defconfig``
+4. Solidrun LX2k lx2160a-cex7 ``lx2160acex7_tfa_defconfig``
+   Need to use git repos listed in ``lx2160a.xml``.
+   (see https://github.com/glikely/u-boot-manifest)
