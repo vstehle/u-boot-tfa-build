@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) Arm Limited, 2020
+#
+# Build config for NXP LX2160A boards
+# Inspired by https://github.com/SolidRun/lx2160a_build
 
 RCW_PATH := $(CURDIR)/rcw
 RCW_TARGET_PATH := $(RCW_PATH)/$(CONFIG_SYS_CONFIG_NAME)
