@@ -240,11 +240,6 @@ TFA_EXTRA += SPD=opteed
 
 tfa/all tfa/fip: optee_os/all
 
-# ================================================
-# Delegate optee targets to optee Makefile
-optee_os/%:
-	${MAKE} -C ${OPTEE_PATH} ${OPTEE_EXTRA} $*
-
 endif # ifeq($(CONFIG_OPTEE),y)
 
 # Default Trusted Firmware configuration settings
@@ -279,8 +274,6 @@ clean: u-boot/clean tfa/distclean devicetree/clean optee_os/clean edk2-clean
 mrproper: u-boot/mrproper tfa/distclean devicetree/clean optee_os/clean
 distclean: u-boot/distclean tfa/distclean devicetree/clean optee_os/clean
 
-endif #ifeq ($(config-targets),1)
-
 # ===========================================================================
 # Common targets - Mostly delegates to the individual project build systems
 
@@ -291,14 +284,15 @@ devicetree/%:
 	${MAKE} -C ${DT_PATH} $*
 
 # ================================================
-# Delegate to op-tee clean target
-optee_os/clean:
-	${MAKE} -C ${OPTEE_PATH} clean
-
 # EDK2 Targets
 PHONY += edk2-clean
 edk2-clean:
 	rm -rf $(EDK2_OUTPUT)
+
+# ================================================
+# Delegate optee targets to optee Makefile
+optee_os/%:
+	${MAKE} -C ${OPTEE_PATH} ${OPTEE_EXTRA} $*
 
 # ================================================
 # Delegate to trusted-firmware-a build
@@ -307,8 +301,12 @@ tfa/%:
 
 tfa/all tfa/fip: u-boot/all
 
+endif #ifeq,else ($(config-targets),1)
+
 # ================================================
 # Delegate to u-boot build
+# 	(This target is outside the $(config-targets) 'else'
+# 	clause so that u-boot/%config targets can use it)
 u-boot/%:
 	$(MAKE) -C $(UBOOT_PATH) $(UBOOT_EXTRA) $*
 
