@@ -205,15 +205,16 @@ export ACTIVE_PLATFORM=Platform/StMMRpmb/PlatformStandaloneMm.dsc
 
 STMM_FD := $(EDK2_OUTPUT)/MmStandaloneRpmb/DEBUG_GCC5/FV/BL32_AP_MM.fd
 
-# Tell optee where to find StMM
-OPTEE_EXTRA += CFG_STMM_PATH=$(STMM_FD)
-
-optee_os/all: stmm/all $(STMM_FD)
-edk2/BaseTools:
+PHONY += edk2-basetools edk2-stmm
+edk2-basetools:
 	source $(EDK2_PATH)/edksetup.sh && $(MAKE) -C $(EDK2_PATH)/BaseTools
 
-stmm/all: edk2/BaseTools
+edk2-stmm: edk2-basetools
 	source $(EDK2_PATH)/edksetup.sh && build -p $(ACTIVE_PLATFORM) -b DEBUG -a AARCH64 -t GCC5 -D DO_X86EMU=TRUE
+
+# Tell optee where to find StMM and add it as a dependency
+OPTEE_EXTRA += CFG_STMM_PATH=$(STMM_FD)
+optee_os/all: edk2-stmm
 
 endif # ifeq($(CONFIG_EFI_MM_COMM_TEE),y)
 
@@ -308,3 +309,6 @@ u-boot/%:
 
 endif #ifeq ($(mixed-targets),1)
 
+# Declare the contents of the PHONY variable as phony.  We keep that
+# information in a variable so we can use it in if_changed and friends.
+.PHONY: $(PHONY)
