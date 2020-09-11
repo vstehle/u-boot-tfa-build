@@ -11,12 +11,6 @@ OPTEE_PLATFORM := rockchip
 OPTEE_EXTRA += PLATFORM_FLAVOR=rk3399
 FLASH_IMAGE := $(UBOOT_OUTPUT)/flash_image.bin
 
-# On the rk3399, U-Boot instead of TF-A builds the final firmware package, and
-# only BL31 is taken from the TFA build. Swap around the dependencies so that
-# U-Boot depends on tfa/bl31, and the BL31 image is passed to the U-Boot build
-
-u-boot/all: tfa/bl31
-
 ifeq ($(CONFIG_OPTEE),y)
 UBOOT_EXTRA += TEE=$(OPTEE_OUTPUT)/arm-plat-rockchip/core/tee.elf
 u-boot/all: optee_os/all

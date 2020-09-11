@@ -238,7 +238,7 @@ TFA_EXTRA += BL32_EXTRA2=$(OPTEE_OUTPUT)/arm-plat-vexpress/core/tee-pageable_v2.
 TFA_EXTRA += BL32_RAM_LOCATION=tdram
 TFA_EXTRA += SPD=opteed
 
-tfa/all tfa/fip: optee_os/all
+FIP_DEPS += optee_os/all
 
 endif # ifeq($(CONFIG_OPTEE),y)
 
@@ -248,10 +248,21 @@ TFA_EXTRA += LOG_LEVEL=20
 TFA_EXTRA += BL33=$(UBOOT_OUTPUT)/u-boot.bin
 
 FLASH_IMAGE ?= $(TFA_OUTPUT)/$(TFA_PLAT)/release/flash-image.bin
-FLASH_IMAGE_DEPS ?= tfa/all tfa/fip
 SD_IMAGE := $(subst ",,$(CONFIG_SYS_CONFIG_NAME))-sdcard.img
 ESP_SIZE ?= $$((64*1024*1024))
 ESP_OFFSET ?= $$((4*1024*1024))
+
+# Choose who provides BL2. If CONFIG_SPL is enabled, then U-Boot is acting as
+# BL2. Otherwise TF-A BL2 will be used. Set up the dependencies for the
+# selected approach
+# FIP_DEPS are the targets requried to create the FIP or FIT
+ifeq ($(CONFIG_SPL),y)
+u-boot/all: $(FIP_DEPS) tfa/bl31		# U-Boot SPL BL2
+FLASH_IMAGE_DEPS := u-boot/all
+else
+tfa/fip: $(FIP_DEPS) u-boot/all tfa/all		# TF-A BL2
+FLASH_IMAGE_DEPS := tfa/fip
+endif # ifeq($(CONFIG_SPL),y)
 
 endif # ifeq ($(dot-config),1)
 
@@ -298,8 +309,6 @@ optee_os/%:
 # Delegate to trusted-firmware-a build
 tfa/%:
 	${MAKE} -C ${TFA_PATH} ${TFA_EXTRA} $*
-
-tfa/all tfa/fip: u-boot/all
 
 endif #ifeq,else ($(config-targets),1)
 
