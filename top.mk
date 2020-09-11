@@ -23,7 +23,7 @@ UBOOT_PATH := $(CURDIR)/u-boot
 # Give the option of building in a separate directory
 ifneq ($(BUILD_OUTPUT),)
   __BUILD := $(realpath $(BUILD_OUTPUT))
-  EDK2_OUTPUT := $(__BUILD)/edk2/Build
+  EDK2_OUTPUT := $(__BUILD)/Build
   OPTEE_OUTPUT := $(__BUILD)/optee_os
   OPTEE_EXTRA += O=$(OPTEE_OUTPUT)
   TFA_OUTPUT := $(__BUILD)/tfa
@@ -275,7 +275,7 @@ flashimage ${FLASH_IMAGE}: ${FLASH_IMAGE_DEPS}
 sdimage: flashimage
 
 PHONY += clean mrproper distclean
-clean: u-boot/clean tfa/distclean devicetree/clean optee_os/clean
+clean: u-boot/clean tfa/distclean devicetree/clean optee_os/clean edk2-clean
 mrproper: u-boot/mrproper tfa/distclean devicetree/clean optee_os/clean
 distclean: u-boot/distclean tfa/distclean devicetree/clean optee_os/clean
 
@@ -294,6 +294,11 @@ devicetree/%:
 # Delegate to op-tee clean target
 optee_os/clean:
 	${MAKE} -C ${OPTEE_PATH} clean
+
+# EDK2 Targets
+PHONY += edk2-clean
+edk2-clean:
+	rm -rf $(EDK2_OUTPUT)
 
 # ================================================
 # Delegate to trusted-firmware-a build
