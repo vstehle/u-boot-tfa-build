@@ -23,7 +23,7 @@ $(FLASH_IMAGE): tfa/all tfa/fip
 	dd if=$(TFA_OUTPUT)/$(TFA_PLAT)/release/fip.bin of=$(FLASH_IMAGE) bs=4096 seek=64 conv=notrunc
 
 all: semihosting
-semihosting: tfa/all
+semihosting: tfa/all u-boot/all
 	mkdir -p output
 	cp $(TFA_OUTPUT)/$(TFA_PLAT)/release/*.bin output
 ifeq ($(CONFIG_OPTEE),y)
