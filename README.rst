@@ -34,9 +34,11 @@ into the root directory. To build the firmware, simply type::
 Where <target_name> is a U-Boot defconfig that can be found in the
 u-boot/configs directory.
 
-The QEMU config also provides a ``qemu`` target to run the image::
+The QEMU config also provides a ``qemu-fip`` and a ``qemu-semihosting`` targets
+to run the image::
 
-  $ make qemu
+  $ make qemu-fip
+  $ make qemu-semihosting
 
 Patches to target projects
 --------------------------
